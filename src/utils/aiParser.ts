@@ -22,52 +22,59 @@ export interface AIParseResult {
 }
 
 const ANALYSIS_PROMPT = `You are analyzing a Velo by Wix code file to generate a logic and dependency graph, rendered using React Flow.
+
 Your task is to extract meaningful functions and data flow, and output a simplified and clean JSON graph that visually represents only the relevant execution paths.
+
 Please follow these rules:
+
 1. Extract only functions and modules that are **actually used in the logic**.
    - If an import is unused, **do not include it** in the graph.
+
 2. For each function, determine if it uses external services (e.g., APIs like worldtimeapi.org).
    - In that case, **describe the behavior clearly** in the function's node (\`description\`) instead of adding another node for the fetch utility.
+
 3. Do **not include implementation helpers** (e.g., \`fetch\`, \`map\`, \`forEach\`, utility modules) as separate nodes unless they carry meaningful, standalone logic or data flow.
-4. Each node should contain:
+
+4. **Identify endpoints and starting points clearly**:
+   - Mark entry points like \`onReady\`, event handlers, exported functions, or HTTP endpoints
+   - Mark these as potential starting points of code execution flow
+   - Use descriptive labels that indicate their role as entry points
+
+5. Each node should contain:
    - \`id\`: unique identifier
    - \`label\`: function name or concept
-   - \`description\`: short explanation of its purpose or external call
-   - \`type\`: \`"function"\` or \`"externalAPI"\` (avoid \`"wixApi"\` if not relevant to the flow)
-   - \`group\`: e.g., \`"Page Functions"\`, \`"External Services"\`
+   - \`description\`: short explanation of its purpose or external call, **clearly indicating if it's an entry point**
+   - \`type\`: \`"function"\`, \`"eventHandler"\`, \`"externalAPI"\`, \`"pageElement"\`, \`"wixApi"\`, or \`"utility"\`
+   - \`group\`: e.g., \`"Page Functions"\`, \`"Backend Functions"\`, \`"External Services"\`, \`"Entry Points"\`
    - \`position\`: \`{ "x": 0, "y": 0 }\` (layout will be handled later)
-5. Only create edges that describe **actual logical flow or dependency** between two meaningful nodes (e.g., one function calls another).
-6. Output the final result as a JSON object like this:
+
+6. Only create edges that describe **actual logical flow or dependency** between two meaningful nodes (e.g., one function calls another).
+
+7. Output the final result as a JSON object like this:
 
 {
   "nodes": [
     {
-      "id": "onReady",
-      "label": "onReady",
-      "description": "Page lifecycle function. Loads team data and initializes display.",
+      "id": "allZones",
+      "label": "allZones",
+      "description": "**[ENTRY POINT]** Exported backend function that fetches a list of time zones from worldtimeapi.org and formats them for dropdowns.",
       "type": "function",
-      "group": "Page Functions",
+      "group": "Backend Functions",
       "position": { "x": 0, "y": 0 }
     },
     {
-      "id": "wixWindow",
-      "label": "wixWindow",
-      "description": "Wix API to get lightbox context and close lightbox.",
-      "type": "wixApi",
-      "group": "Wix APIs",
+      "id": "userTime",
+      "label": "userTime",
+      "description": "**[ENTRY POINT]** Exported backend function that fetches the current time for a specific time zone using worldtimeapi.org and extracts the hour.",
+      "type": "function",
+      "group": "Backend Functions",
       "position": { "x": 0, "y": 0 }
     }
   ],
-  "edges": [
-    {
-      "source": "onReady",
-      "target": "wixWindow",
-      "label": "calls"
-    }
-  ]
+  "edges": []
 }
 
-7. Add layout hints by ensuring \`group\` is assigned meaningfully, so the frontend can organize them in vertical columns or swimlanes.
+8. Add layout hints by ensuring \`group\` is assigned meaningfully, so the frontend can organize them in vertical columns or swimlanes.
 
 Now analyze the following Velo code and return only the JSON:`;
 
