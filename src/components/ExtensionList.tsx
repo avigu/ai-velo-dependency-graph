@@ -94,16 +94,33 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension }: 
           </span>
         )}
 
-        <button
-          onClick={onNewExtension}
-          className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
-          style={{ background: '#0e70c0', color: '#fff' }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#1481cc')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#0e70c0')}
-        >
-          <Plus size={13} />
-          New Extension
-        </button>
+        <div className="ml-auto flex items-center gap-2">
+          <a
+            href="/simple"
+            className="px-3 py-1.5 rounded text-xs font-medium transition-colors"
+            style={{ color: '#858585', border: '1px solid #3e3e42' }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.color = '#cccccc';
+              (e.currentTarget as HTMLElement).style.borderColor = '#606060';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.color = '#858585';
+              (e.currentTarget as HTMLElement).style.borderColor = '#3e3e42';
+            }}
+          >
+            Simple view
+          </a>
+          <button
+            onClick={onNewExtension}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
+            style={{ background: '#0e70c0', color: '#fff' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#1481cc')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#0e70c0')}
+          >
+            <Plus size={13} />
+            New Extension
+          </button>
+        </div>
       </div>
 
       {/* ── Grouped content ─────────────────────────────────────────────── */}

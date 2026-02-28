@@ -13,4 +13,9 @@ export default defineConfig({
       '.ngrok-free.dev',
     ],
   },
+  preview: {
+    host: true,
+  },
+  // Serve index.html for all routes (SPA fallback)
+  appType: 'spa',
 });
