@@ -114,6 +114,26 @@ export const ProductCard: React.FC<Props> = ({
 `,
       },
     ],
+    usages: [
+      {
+        id: 'u1',
+        pageName: 'Products',
+        sectionName: 'Featured Products',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=products&sectionId=featured-products',
+      },
+      {
+        id: 'u2',
+        pageName: 'Home',
+        sectionName: 'Best Sellers',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=home&sectionId=best-sellers',
+      },
+      {
+        id: 'u3',
+        pageName: 'Product Detail',
+        sectionName: 'Related Items',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=product-detail&sectionId=related-items',
+      },
+    ],
     history: [
       {
         id: 'h1',
@@ -217,6 +237,20 @@ export const HeroBanner: React.FC<Props> = ({
 `,
       },
     ],
+    usages: [
+      {
+        id: 'u4',
+        pageName: 'Home',
+        sectionName: 'Hero',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=home&sectionId=hero',
+      },
+      {
+        id: 'u5',
+        pageName: 'About',
+        sectionName: 'Hero',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=about&sectionId=hero',
+      },
+    ],
     history: [
       {
         id: 'h3',
@@ -297,6 +331,14 @@ export const ReviewWidget: React.FC<Props> = ({ reviews, pageSize = 5 }) => {
   );
 };
 `,
+      },
+    ],
+    usages: [
+      {
+        id: 'u6',
+        pageName: 'Product Detail',
+        sectionName: 'Reviews',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=product-detail&sectionId=reviews',
       },
     ],
     history: [],
@@ -437,6 +479,29 @@ export const useCart = () => {
 `,
       },
     ],
+    usages: [
+      {
+        id: 'u7',
+        pageName: 'Products',
+        sectionName: 'Featured Products',
+        boundToComponent: 'ProductCard',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=products&sectionId=featured-products',
+      },
+      {
+        id: 'u8',
+        pageName: 'Home',
+        sectionName: 'Header',
+        boundToComponent: 'CartWidget',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=home&sectionId=header',
+      },
+      {
+        id: 'u9',
+        pageName: 'Checkout',
+        sectionName: 'Order Summary',
+        boundToComponent: 'OrderSummary',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=checkout&sectionId=order-summary',
+      },
+    ],
     history: [
       {
         id: 'h4',
@@ -539,6 +604,22 @@ export const useUser = () => {
 `,
       },
     ],
+    usages: [
+      {
+        id: 'u10',
+        pageName: 'Home',
+        sectionName: 'Header',
+        boundToComponent: 'NavBar',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=home&sectionId=header',
+      },
+      {
+        id: 'u11',
+        pageName: 'Account',
+        sectionName: 'Profile',
+        boundToComponent: 'ProfileWidget',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=account&sectionId=profile',
+      },
+    ],
     history: [],
   },
 
@@ -612,6 +693,22 @@ describe('formatCurrency', () => {
 `,
       },
     ],
+    usages: [
+      {
+        id: 'u12',
+        pageName: 'Products',
+        sectionName: 'Featured Products',
+        boundToComponent: 'ProductCard',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=products&sectionId=featured-products',
+      },
+      {
+        id: 'u13',
+        pageName: 'Checkout',
+        sectionName: 'Order Summary',
+        boundToComponent: 'OrderSummary',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=checkout&sectionId=order-summary',
+      },
+    ],
     history: [],
   },
 
@@ -650,6 +747,22 @@ describe('formatCurrency', () => {
     .replace(/^-+|-+$/g, '');
 }
 `,
+      },
+    ],
+    usages: [
+      {
+        id: 'u14',
+        pageName: 'Blog',
+        sectionName: 'Article',
+        boundToComponent: 'BlogPost',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=blog&sectionId=article',
+      },
+      {
+        id: 'u15',
+        pageName: 'Products',
+        sectionName: 'Featured Products',
+        boundToComponent: 'ProductCard',
+        editorDeepLink: 'https://editor.wix.com/html/editor/web/renderer/edit/mocksite?pageId=products&sectionId=featured-products',
       },
     ],
     history: [],
