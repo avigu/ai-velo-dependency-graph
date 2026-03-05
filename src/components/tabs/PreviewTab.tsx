@@ -30,7 +30,7 @@ function ComponentPreview({ extension }: { extension: Extension }) {
         Live sandbox preview — rendered with mock props
       </p>
       <div
-        className="rounded-lg border p-8 flex items-center justify-center"
+        className="rounded-lg border p-4 sm:p-8 flex items-center justify-center overflow-x-auto"
         style={{ background: '#fff', borderColor: '#3e3e42', minHeight: 280 }}
       >
         <MockComponentRender name={extension.name} />
@@ -87,7 +87,7 @@ function MockComponentRender({ name }: { name: string }) {
 
   if (name.toLowerCase().includes('navigation') || name.toLowerCase().includes('menu')) {
     return (
-      <div style={{ fontFamily: 'sans-serif', width: '100%', maxWidth: 480 }}>
+      <div style={{ fontFamily: 'sans-serif', width: '100%', maxWidth: '100%' }}>
         <nav style={{ background: '#1a1a2e', padding: '12px 20px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 24 }}>
           <span style={{ color: '#e94560', fontWeight: 700, fontSize: 18 }}>Logo</span>
           {['Home', 'Products', 'About', 'Contact'].map(item => (
@@ -205,11 +205,11 @@ function ContextPreview({ extension }: { extension: Extension }) {
 function DataFieldRow({ field }: { field: ContextDataField }) {
   return (
     <div
-      className="rounded-lg border px-4 py-3 flex gap-4"
+      className="rounded-lg border px-4 py-3 flex flex-col sm:flex-row gap-2 sm:gap-4"
       style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
     >
       {/* Left: name + type */}
-      <div style={{ minWidth: 180 }}>
+      <div className="shrink-0" style={{ minWidth: 0 }}>
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-mono font-semibold" style={{ color: '#9cdcfe' }}>
             {field.name}
@@ -246,11 +246,11 @@ function ActionRow({ action }: { action: ContextAction }) {
 
   return (
     <div
-      className="rounded-lg border px-4 py-3 flex gap-4"
+      className="rounded-lg border px-4 py-3 flex flex-col sm:flex-row gap-2 sm:gap-4"
       style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
     >
       {/* Left: signature + return type */}
-      <div style={{ minWidth: 180 }}>
+      <div className="shrink-0" style={{ minWidth: 0 }}>
         <div className="mb-1">
           <span className="text-sm font-mono font-semibold" style={{ color: '#dcdcaa' }}>
             {signature}
@@ -329,24 +329,35 @@ function ApiPreview({ extension }: { extension: Extension }) {
 
       {/* Request bar */}
       <div
-        className="flex gap-2 mb-4 p-3 rounded-lg border"
+        className="flex flex-col sm:flex-row gap-2 mb-4 p-3 rounded-lg border"
         style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
       >
-        <select
-          value={method}
-          onChange={e => setMethod(e.target.value)}
-          className="px-2 py-1.5 rounded text-xs font-bold border-0 focus:outline-none"
-          style={{ background: '#1e1e1e', color: METHOD_COLORS[method], minWidth: 80 }}
-        >
-          {HTTP_METHODS.map(m => (
-            <option key={m} value={m} style={{ color: METHOD_COLORS[m] }}>{m}</option>
-          ))}
-        </select>
+        <div className="flex gap-2">
+          <select
+            value={method}
+            onChange={e => setMethod(e.target.value)}
+            className="px-2 py-1.5 rounded text-xs font-bold border-0 focus:outline-none shrink-0"
+            style={{ background: '#1e1e1e', color: METHOD_COLORS[method], minWidth: 80 }}
+          >
+            {HTTP_METHODS.map(m => (
+              <option key={m} value={m} style={{ color: METHOD_COLORS[m] }}>{m}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleSend}
+            disabled={loading}
+            className="sm:hidden flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors shrink-0"
+            style={{ background: '#0e70c0', color: '#fff', opacity: loading ? 0.7 : 1 }}
+          >
+            <Send size={12} />
+            {loading ? '…' : 'Send'}
+          </button>
+        </div>
         <input
           type="text"
           value={path}
           onChange={e => setPath(e.target.value)}
-          className="flex-1 px-3 py-1.5 rounded text-sm border focus:outline-none font-mono"
+          className="flex-1 min-w-0 px-3 py-1.5 rounded text-sm border focus:outline-none font-mono"
           style={{ background: '#1e1e1e', color: '#cccccc', borderColor: '#3e3e42', fontSize: 12 }}
           onFocus={e => (e.target.style.borderColor = '#0e70c0')}
           onBlur={e => (e.target.style.borderColor = '#3e3e42')}
@@ -354,7 +365,7 @@ function ApiPreview({ extension }: { extension: Extension }) {
         <button
           onClick={handleSend}
           disabled={loading}
-          className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors shrink-0"
           style={{ background: '#0e70c0', color: '#fff', opacity: loading ? 0.7 : 1 }}
         >
           <Send size={12} />
@@ -445,7 +456,7 @@ function MockDashboardContent({ name }: { name: string }) {
     return (
       <div>
         <h2 style={{ margin: '0 0 16px', fontSize: 20, color: '#0f172a', fontWeight: 700 }}>Sales Analytics</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12, marginBottom: 20 }}>
           {[
             { label: 'Total Revenue', value: '$48,210', change: '+12%' },
             { label: 'Orders', value: '384', change: '+8%' },
@@ -482,6 +493,7 @@ function MockDashboardContent({ name }: { name: string }) {
             + Add Product
           </button>
         </div>
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ background: '#f1f5f9' }}>
@@ -507,6 +519,7 @@ function MockDashboardContent({ name }: { name: string }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     );
   }

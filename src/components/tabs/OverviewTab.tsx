@@ -12,7 +12,7 @@ export default function OverviewTab({ extension, onStatusToggle }: OverviewTabPr
   const meta = TYPE_META[extension.type];
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="p-4 sm:p-6 max-w-3xl">
       {/* Title & Status */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -129,17 +129,17 @@ function UsedInSection({ usages, type }: { usages: ExtensionUsage[]; type: strin
 function UsageCard({ usage, isBinding }: { usage: ExtensionUsage; isBinding: boolean }) {
   return (
     <div
-      className="rounded-lg border flex items-center gap-3 px-4 py-3"
+      className="rounded-lg border flex flex-wrap items-start gap-3 px-4 py-3"
       style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
     >
       {/* Location */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 mb-0.5">
-          <span className="text-xs font-medium" style={{ color: '#cccccc' }}>
+        <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+          <span className="text-xs font-medium truncate" style={{ color: '#cccccc' }}>
             Page &ldquo;{usage.pageName}&rdquo;
           </span>
           <span style={{ color: '#3e3e42' }}>·</span>
-          <span className="text-xs" style={{ color: '#858585' }}>
+          <span className="text-xs truncate" style={{ color: '#858585' }}>
             Section &ldquo;{usage.sectionName}&rdquo;
           </span>
         </div>

@@ -25,11 +25,30 @@ export default function CodeTab({ extension }: CodeTabProps) {
   }, [extension.id]);
 
   return (
-    <div className="flex h-full" style={{ minHeight: 0 }}>
-      {/* File tree */}
+    <div className="flex flex-col sm:flex-row h-full" style={{ minHeight: 0 }}>
+      {/* Mobile: select dropdown */}
+      {extension.codeFiles.length > 1 && (
+        <div className="sm:hidden px-3 py-2 border-b shrink-0" style={{ background: '#252526', borderColor: '#3e3e42' }}>
+          <select
+            value={selectedFile.name}
+            onChange={e => {
+              const f = extension.codeFiles.find(f => f.name === e.target.value);
+              if (f) setSelectedFile(f);
+            }}
+            className="w-full px-2 py-1.5 rounded text-xs border focus:outline-none"
+            style={{ background: '#1e1e1e', color: '#cccccc', borderColor: '#3e3e42' }}
+          >
+            {extension.codeFiles.map(file => (
+              <option key={file.name} value={file.name}>{file.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Desktop: file tree sidebar */}
       {extension.codeFiles.length > 1 && (
         <div
-          className="w-48 border-r flex flex-col overflow-y-auto shrink-0"
+          className="hidden sm:flex w-48 border-r flex-col overflow-y-auto shrink-0"
           style={{ background: '#252526', borderColor: '#3e3e42' }}
         >
           <p className="px-3 py-2 text-[10px] uppercase tracking-widest" style={{ color: '#858585' }}>

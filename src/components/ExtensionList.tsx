@@ -67,14 +67,14 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension }: 
     <div className="flex flex-col h-full overflow-hidden">
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div
-        className="flex items-center gap-3 px-6 py-3 border-b shrink-0"
+        className="flex items-center gap-2 px-4 sm:px-6 py-3 border-b shrink-0"
         style={{ background: '#252526', borderColor: '#3e3e42' }}
       >
         <h1 className="text-sm font-semibold whitespace-nowrap" style={{ color: '#cccccc' }}>
           Extensions
         </h1>
 
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative flex-1 min-w-0">
           <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
@@ -96,18 +96,18 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension }: 
 
         <button
           onClick={onNewExtension}
-          className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
+          className="ml-auto shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
           style={{ background: '#0e70c0', color: '#fff' }}
           onMouseEnter={e => (e.currentTarget.style.background = '#1481cc')}
           onMouseLeave={e => (e.currentTarget.style.background = '#0e70c0')}
         >
           <Plus size={13} />
-          New Extension
+          <span className="hidden sm:inline">New Extension</span>
         </button>
       </div>
 
       {/* ── Grouped content ─────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-6 py-5 space-y-8">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-8">
         {groups.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center h-full"
@@ -171,7 +171,7 @@ function TypeSection({
       {/* Cards */}
       <div
         className="grid gap-3"
-        style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}
+        style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))' }}
       >
         {extensions.map(ext => (
           <ExtensionCard key={ext.id} ext={ext} onSelect={onSelect} />

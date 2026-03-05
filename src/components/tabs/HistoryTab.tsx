@@ -11,7 +11,7 @@ export default function HistoryTab({ extension }: HistoryTabProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="p-4 sm:p-6 max-w-3xl">
       <div className="flex items-center gap-2 mb-5">
         <GitCommit size={16} style={{ color: '#858585' }} />
         <h3 className="text-sm font-semibold" style={{ color: '#cccccc' }}>
@@ -122,8 +122,8 @@ function DiffViewer({ diff }: { diff: string }) {
       <div className="px-3 py-1.5 border-b flex items-center gap-2" style={{ borderColor: '#3e3e42', background: '#252526' }}>
         <span className="text-[10px] uppercase tracking-wider" style={{ color: '#858585' }}>Diff</span>
       </div>
-      <div className="text-xs font-mono overflow-x-auto">
-        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <div className="text-xs font-mono overflow-x-auto" style={{ minWidth: 0 }}>
+        <table style={{ borderCollapse: 'collapse', minWidth: '100%' }}>
           <tbody>
             {lines.map((line, i) => {
               const isAdd = line.startsWith('+') && !line.startsWith('+++');
