@@ -15,6 +15,7 @@ import {
   Bell,
   LayoutDashboard,
   SlidersHorizontal,
+  ArrowRight,
 } from 'lucide-react';
 import { AIRequest, Extension, ExtensionType, RequestStatus, TYPE_META } from '../types';
 import { MOCK_REQUESTS } from '../mock-data';
@@ -77,6 +78,7 @@ export default function RequestsView({ extensions, onNavigateToExtension, active
         extensions={extensions}
         onBack={() => setSelected(null)}
         onNavigateToExtension={onNavigateToExtension}
+        onSelectRequest={setSelected}
         onRollback={() => setRollbackTarget(selected)}
         onRollbackConfirm={handleRollback}
         rollbackTarget={rollbackTarget}
@@ -259,6 +261,7 @@ interface DetailProps {
   extensions: Extension[];
   onBack: () => void;
   onNavigateToExtension: (ext: Extension) => void;
+  onSelectRequest: (req: AIRequest) => void;
   onRollback: () => void;
   onRollbackConfirm: (req: AIRequest) => void;
   rollbackTarget: AIRequest | null;
@@ -273,6 +276,7 @@ function RequestDetail({
   extensions,
   onBack,
   onNavigateToExtension,
+  onSelectRequest,
   onRollback,
   onRollbackConfirm,
   rollbackTarget,
@@ -348,15 +352,30 @@ function RequestDetail({
         {/* Extensions created */}
         {createdExts.length > 0 && (
           <Section label={`Extensions created · ${createdExts.length}`}>
-            <div className="space-y-2">
-              {createdExts.map(ext => (
-                <ExtensionRow
-                  key={ext.id}
-                  ext={ext}
-                  badge="Created ✦"
-                  onClick={() => onNavigateToExtension(ext)}
-                />
-              ))}
+            <div className="space-y-3">
+              {createdExts.map(ext => {
+                const laterMods = requests.filter(
+                  r => r.id !== request.id && r.modifiedExtensionIds.includes(ext.id),
+                );
+                return (
+                  <div key={ext.id} className="space-y-1">
+                    <ExtensionRow
+                      ext={ext}
+                      badge="Created ✦"
+                      onClick={() => onNavigateToExtension(ext)}
+                    />
+                    {laterMods.map(r => (
+                      <CrossRequestNote
+                        key={r.id}
+                        direction="later"
+                        label="Later modified in"
+                        request={r}
+                        onClick={() => onSelectRequest(r)}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </Section>
         )}
@@ -364,15 +383,27 @@ function RequestDetail({
         {/* Extensions modified */}
         {modifiedExts.length > 0 && (
           <Section label={`Extensions modified · ${modifiedExts.length}`}>
-            <div className="space-y-2">
-              {modifiedExts.map(ext => (
-                <ExtensionRow
-                  key={ext.id}
-                  ext={ext}
-                  badge="Modified"
-                  onClick={() => onNavigateToExtension(ext)}
-                />
-              ))}
+            <div className="space-y-3">
+              {modifiedExts.map(ext => {
+                const originReq = requests.find(r => r.extensionIds.includes(ext.id));
+                return (
+                  <div key={ext.id} className="space-y-1">
+                    {originReq && (
+                      <CrossRequestNote
+                        direction="origin"
+                        label="Originally created in"
+                        request={originReq}
+                        onClick={() => onSelectRequest(originReq)}
+                      />
+                    )}
+                    <ExtensionRow
+                      ext={ext}
+                      badge="Modified"
+                      onClick={() => onNavigateToExtension(ext)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </Section>
         )}
@@ -616,6 +647,47 @@ function RollbackModal({
         </div>
       </div>
     </div>
+  );
+}
+
+// ── CrossRequestNote ──────────────────────────────────────────────────────────
+
+function CrossRequestNote({
+  direction,
+  label,
+  request,
+  onClick,
+}: {
+  direction: 'origin' | 'later';
+  label: string;
+  request: AIRequest;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-2 px-3 py-2 rounded text-xs transition-colors text-left"
+      style={{
+        background: 'transparent',
+        border: `1px dashed ${direction === 'origin' ? '#4ade8044' : '#60a5fa44'}`,
+        color: direction === 'origin' ? '#4ade80' : '#60a5fa',
+        marginLeft: direction === 'later' ? 12 : 0,
+      }}
+      onMouseEnter={e => {
+        (e.currentTarget as HTMLElement).style.background =
+          direction === 'origin' ? 'rgba(74,222,128,0.06)' : 'rgba(96,165,250,0.06)';
+      }}
+      onMouseLeave={e => {
+        (e.currentTarget as HTMLElement).style.background = 'transparent';
+      }}
+    >
+      <Sparkles size={11} className="shrink-0 opacity-70" />
+      <span className="opacity-70">{label}:</span>
+      <span className="flex-1 truncate font-medium" style={{ color: '#cccccc' }}>
+        "{request.prompt.length > 55 ? request.prompt.slice(0, 55) + '…' : request.prompt}"
+      </span>
+      <ArrowRight size={11} className="shrink-0 opacity-50" />
+    </button>
   );
 }
 
