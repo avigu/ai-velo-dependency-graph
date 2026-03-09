@@ -105,6 +105,10 @@ interface ExtensionBase {
   configFields: ConfigField[];
   codeFiles: CodeFile[];
   history: HistoryEntry[];
+  // AI provenance
+  aiGenerated?: boolean;
+  aiModified?: boolean;
+  requestId?: string;
 }
 
 export interface ComponentExtension extends ExtensionBase {
@@ -241,3 +245,35 @@ export const CATEGORY_TYPES: Record<ExtensionCategory, ExtensionType[]> = {
   backend: ['web-method', 'api', 'event-handler'],
   dashboard: ['dashboard-page'],
 };
+
+// ─── AI Requests ─────────────────────────────────────────────────────────────
+
+export type RequestStatus = 'active' | 'rolled-back' | 'partially-rolled-back';
+
+export type RelationshipEdgeType = 'uses' | 'triggers' | 'exposes' | 'created-together';
+
+export interface RelationshipEdge {
+  id: string;
+  source: string; // extension id
+  target: string; // extension id
+  type: RelationshipEdgeType;
+}
+
+export interface ConfigChange {
+  extensionId: string;
+  fieldId: string;
+  previousValue: string | boolean | string[] | number;
+  newValue: string | boolean | string[] | number;
+}
+
+export interface AIRequest {
+  id: string;
+  prompt: string;
+  timestamp: string;
+  status: RequestStatus;
+  extensionIds: string[];          // created in this request
+  modifiedExtensionIds: string[];  // modified (not created) in this request
+  configChanges: ConfigChange[];
+  assistantSummary: string;
+  relationshipEdges: RelationshipEdge[];
+}

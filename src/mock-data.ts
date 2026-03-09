@@ -1,4 +1,4 @@
-import { Extension } from './types';
+import { Extension, AIRequest } from './types';
 
 export const MOCK_EXTENSIONS: Extension[] = [
   // ─── Components ────────────────────────────────────────────────────────────
@@ -9,9 +9,11 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'site',
     status: 'active',
     description: 'Displays a single product with image, title, price, and an add-to-cart button.',
-    author: 'alice@example.com',
-    createdAt: '2024-01-10T09:00:00Z',
-    modifiedAt: '2024-06-14T11:23:00Z',
+    author: 'AI Assistant',
+    createdAt: '2024-07-10T14:30:00Z',
+    modifiedAt: '2024-07-10T14:30:00Z',
+    aiGenerated: true,
+    requestId: 'req-loyalty',
     configFields: [
       {
         id: 'showRating',
@@ -352,51 +354,11 @@ export const ReviewWidget: React.FC<Props> = ({ reviews, pageSize = 5 }) => {
     category: 'site',
     status: 'active',
     description: 'Provides shopping cart state (items, totals) and actions (add, remove, clear) to all child components.',
-    author: 'alice@example.com',
-    createdAt: '2024-01-15T10:00:00Z',
-    modifiedAt: '2024-06-30T08:00:00Z',
-    contextSchema: {
-      dataFields: [
-        {
-          name: 'items',
-          type: 'CartItem[]',
-          description: 'Ordered list of items currently in the cart, each with a productId and quantity.',
-          readonly: true,
-        },
-        {
-          name: 'itemCount',
-          type: 'number',
-          description: 'Total quantity of units across all cart lines.',
-          readonly: true,
-        },
-        {
-          name: 'subtotal',
-          type: 'number',
-          description: 'Cart subtotal in the site currency before taxes and shipping.',
-          readonly: true,
-        },
-      ],
-      actions: [
-        {
-          name: 'addToCart',
-          params: 'productId: string',
-          returns: 'void',
-          description: 'Adds one unit of a product. If the product is already in the cart its quantity is incremented.',
-        },
-        {
-          name: 'removeFromCart',
-          params: 'productId: string',
-          returns: 'void',
-          description: 'Removes the entire line for a product from the cart, regardless of quantity.',
-        },
-        {
-          name: 'clearCart',
-          params: '',
-          returns: 'void',
-          description: 'Empties the cart completely, resetting all items and totals to zero.',
-        },
-      ],
-    },
+    author: 'AI Assistant',
+    createdAt: '2024-07-10T14:30:00Z',
+    modifiedAt: '2024-07-10T14:30:00Z',
+    aiGenerated: true,
+    requestId: 'req-loyalty',
     configFields: [
       {
         id: 'persistenceStrategy',
@@ -522,37 +484,9 @@ export const useCart = () => {
     description: 'Exposes current member profile, login status, and permission checks to site components.',
     author: 'dave@example.com',
     createdAt: '2024-01-20T11:00:00Z',
-    modifiedAt: '2024-04-18T13:30:00Z',
-    contextSchema: {
-      dataFields: [
-        {
-          name: 'user',
-          type: 'User | null',
-          description: 'Full profile of the currently authenticated member, or null for unauthenticated visitors.',
-          readonly: true,
-        },
-        {
-          name: 'isLoggedIn',
-          type: 'boolean',
-          description: 'True when a member session is active; use this to conditionally render gated UI.',
-          readonly: true,
-        },
-        {
-          name: 'roles',
-          type: 'string[]',
-          description: 'List of role IDs assigned to the current member, empty for guests.',
-          readonly: true,
-        },
-      ],
-      actions: [
-        {
-          name: 'hasRole',
-          params: 'roleId: string',
-          returns: 'boolean',
-          description: 'Returns true if the current member holds the given role. Always false for guests.',
-        },
-      ],
-    },
+    modifiedAt: '2024-04-12T09:00:00Z',
+    aiModified: true,
+    requestId: 'req-member-welcome',
     configFields: [
       {
         id: 'guestLabel',
@@ -776,9 +710,11 @@ describe('formatCurrency', () => {
     category: 'backend',
     status: 'active',
     description: 'Triggered after checkout; sends a transactional confirmation email via the Wix Triggered Emails API.',
-    author: 'alice@example.com',
-    createdAt: '2024-01-25T12:00:00Z',
-    modifiedAt: '2024-06-10T15:30:00Z',
+    author: 'AI Assistant',
+    createdAt: '2024-06-10T09:00:00Z',
+    modifiedAt: '2024-06-10T09:00:00Z',
+    aiGenerated: true,
+    requestId: 'req-order-confirm',
     configFields: [
       {
         id: 'templateId',
@@ -876,11 +812,13 @@ export const updateMemberProfile = webMethod(
     name: 'Products REST API',
     type: 'api',
     category: 'backend',
-    status: 'active',
+    status: 'inactive',
     description: 'Public HTTP endpoint returning paginated product catalogue data in JSON format.',
-    author: 'carol@example.com',
-    createdAt: '2024-01-30T14:00:00Z',
-    modifiedAt: '2024-07-05T10:00:00Z',
+    author: 'AI Assistant',
+    createdAt: '2024-03-05T11:00:00Z',
+    modifiedAt: '2024-03-05T11:00:00Z',
+    aiGenerated: true,
+    requestId: 'req-analytics',
     configFields: [
       {
         id: 'defaultPageSize',
@@ -1006,9 +944,11 @@ export async function post_stripe_webhook(request) {
     category: 'backend',
     status: 'active',
     description: 'Fires when a Wix Stores order transitions to paid; assigns loyalty points and sends a thank-you notification.',
-    author: 'alice@example.com',
-    createdAt: '2024-02-10T10:00:00Z',
-    modifiedAt: '2024-05-30T14:00:00Z',
+    author: 'AI Assistant',
+    createdAt: '2024-07-10T14:30:00Z',
+    modifiedAt: '2024-07-10T14:30:00Z',
+    aiGenerated: true,
+    requestId: 'req-loyalty',
     configFields: [
       {
         id: 'pointsPerDollar',
@@ -1061,11 +1001,13 @@ export async function wixStores_onOrderPaid(event) {
     name: 'onMemberRegistered',
     type: 'event-handler',
     category: 'backend',
-    status: 'inactive',
+    status: 'active',
     description: 'Triggered on new member registration; adds the member to a welcome email sequence and a default CRM label.',
-    author: 'bob@example.com',
+    author: 'AI Assistant',
     createdAt: '2024-04-12T09:00:00Z',
     modifiedAt: '2024-04-12T09:00:00Z',
+    aiGenerated: true,
+    requestId: 'req-member-welcome',
     configFields: [
       {
         id: 'defaultLabel',
@@ -1102,11 +1044,13 @@ export async function wixMembers_onMemberRegistered(event) {
     name: 'Sales Analytics',
     type: 'dashboard-page',
     category: 'dashboard',
-    status: 'active',
+    status: 'inactive',
     description: 'Custom dashboard page displaying real-time sales charts, top products, and revenue KPIs for site owners.',
-    author: 'carol@example.com',
-    createdAt: '2024-03-01T08:00:00Z',
-    modifiedAt: '2024-07-10T12:00:00Z',
+    author: 'AI Assistant',
+    createdAt: '2024-03-05T11:00:00Z',
+    modifiedAt: '2024-03-05T11:00:00Z',
+    aiGenerated: true,
+    requestId: 'req-analytics',
     configFields: [
       {
         id: 'defaultDateRange',
@@ -1236,5 +1180,73 @@ export default function InventoryManager() {
       },
     ],
     history: [],
+  },
+];
+
+// ─── Mock AI Requests ─────────────────────────────────────────────────────────
+
+export const MOCK_REQUESTS: AIRequest[] = [
+  {
+    id: 'req-loyalty',
+    prompt: 'Add a loyalty points widget to my store. Show how many points customers have earned and let them redeem rewards.',
+    timestamp: '2024-07-10T14:30:00Z',
+    status: 'active',
+    extensionIds: ['cmp-product-card', 'ctx-cart', 'ev-order-paid'],
+    modifiedExtensionIds: [],
+    configChanges: [],
+    assistantSummary:
+      "To add a loyalty points widget I created three extensions that work together: a ProductCard component that displays points earned per purchase, a CartContext that tracks accumulated points across the session, and an onOrderPaid event handler that credits points whenever an order completes. A pure-configuration solution wasn't possible because Wix's built-in checkout flow doesn't expose a points calculation hook — custom code was needed to bridge the gap.",
+    relationshipEdges: [
+      { id: 'e-l1', source: 'ctx-cart', target: 'cmp-product-card', type: 'exposes' },
+      { id: 'e-l2', source: 'cmp-product-card', target: 'ctx-cart', type: 'uses' },
+      { id: 'e-l3', source: 'ev-order-paid', target: 'ctx-cart', type: 'triggers' },
+    ],
+  },
+  {
+    id: 'req-order-confirm',
+    prompt: 'Send me an email confirmation after every order is placed with the order ID and customer details.',
+    timestamp: '2024-06-10T09:00:00Z',
+    status: 'active',
+    extensionIds: ['wm-send-confirmation'],
+    modifiedExtensionIds: [],
+    configChanges: [],
+    assistantSummary:
+      "I created a sendOrderConfirmation web method that sends a transactional email via Wix Triggered Emails whenever it's called from the client side after checkout. The existing Wix order flow already supports post-purchase hooks; the web method bridges the gap by calling the email API with the order ID and recipient as template variables. No additional extensions were needed.",
+    relationshipEdges: [],
+  },
+  {
+    id: 'req-analytics',
+    prompt: 'Create a sales analytics dashboard so I can see revenue, top products, and daily order trends in one place.',
+    timestamp: '2024-03-05T11:00:00Z',
+    status: 'rolled-back',
+    extensionIds: ['dp-analytics', 'api-products'],
+    modifiedExtensionIds: [],
+    configChanges: [],
+    assistantSummary:
+      "I built a Sales Analytics dashboard page that visualises revenue KPIs, top-selling products, and a daily sales trend chart. A companion Products REST API extension was also created to supply the aggregated data to the dashboard. This request was rolled back after testing showed the dashboard was too slow on catalogues with more than 500 products — a pagination and caching strategy needs to be designed first.",
+    relationshipEdges: [
+      { id: 'e-a1', source: 'dp-analytics', target: 'api-products', type: 'uses' },
+    ],
+  },
+  {
+    id: 'req-member-welcome',
+    prompt: 'Welcome new members automatically — add them to a CRM label and send them a welcome message when they sign up.',
+    timestamp: '2024-04-12T09:00:00Z',
+    status: 'active',
+    extensionIds: ['ev-member-joined'],
+    modifiedExtensionIds: ['ctx-user'],
+    configChanges: [
+      {
+        extensionId: 'ctx-user',
+        fieldId: 'guestLabel',
+        previousValue: 'Guest',
+        newValue: 'New Member',
+      },
+    ],
+    assistantSummary:
+      "I created an onMemberRegistered event handler that automatically adds new members to a CRM label and enrols them in a welcome email automation sequence. I also updated the UserContext's guest display label from \"Guest\" to \"New Member\" to better match the brand tone across the site. The event handler was necessary because Wix Automations alone can't apply CRM labels conditionally based on registration source.",
+    relationshipEdges: [
+      { id: 'e-m1', source: 'ev-member-joined', target: 'ctx-user', type: 'triggers' },
+    ],
   },
 ];
