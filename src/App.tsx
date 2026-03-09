@@ -23,9 +23,9 @@ function App() {
     }, 3500);
   }, []);
 
-  const handleSelectExtension = useCallback((ext: Extension) => {
+  const handleSelectExtension = useCallback((ext: Extension, tab?: string) => {
     setSelectedExtension(ext);
-    setActiveTab('overview');
+    setActiveTab((tab as TabId) ?? 'overview');
   }, []);
 
   const handleBack = useCallback(() => {

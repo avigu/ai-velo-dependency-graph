@@ -298,10 +298,10 @@ export default function CreateExtensionModal({ onClose, onCreate }: CreateExtens
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div
-        className="rounded-xl border shadow-2xl flex flex-col overflow-hidden"
-        style={{ background: '#252526', borderColor: '#3e3e42', width: 680, maxHeight: '85vh' }}
+        className="w-full rounded-xl border shadow-2xl flex flex-col overflow-hidden"
+        style={{ background: '#252526', borderColor: '#3e3e42', maxWidth: 680, maxHeight: '90vh' }}
       >
         {/* Modal header */}
         <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: '#3e3e42' }}>
@@ -428,7 +428,7 @@ function Step1TypePicker({
       <p className="text-xs mb-4" style={{ color: '#858585' }}>
         Choose the type of extension you want to create.
       </p>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {allTypes.map(type => {
           const meta = TYPE_META[type];
           const isSelected = selected === type;

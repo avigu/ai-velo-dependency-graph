@@ -78,7 +78,7 @@ export default function DetailPanel({
           {meta.label}
         </span>
 
-        <h2 className="text-sm font-semibold" style={{ color: '#cccccc' }}>
+        <h2 className="text-sm font-semibold truncate min-w-0" style={{ color: '#cccccc' }}>
           {extension.name}
         </h2>
 
@@ -89,14 +89,14 @@ export default function DetailPanel({
 
       {/* Tabs */}
       <div
-        className="flex border-b shrink-0"
+        className="flex overflow-x-auto border-b shrink-0 scrollbar-none"
         style={{ background: '#252526', borderColor: '#3e3e42' }}
       >
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className="px-4 py-2.5 text-xs font-medium transition-colors relative"
+            className="whitespace-nowrap px-3 py-2 sm:px-4 sm:py-2.5 text-xs font-medium transition-colors relative shrink-0"
             style={{
               color: activeTab === tab.id ? '#cccccc' : '#858585',
               borderBottom: activeTab === tab.id ? '2px solid #0e70c0' : '2px solid transparent',

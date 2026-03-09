@@ -59,6 +59,38 @@ export interface HistoryEntry {
   diff: string;
 }
 
+// ─── Usage ───────────────────────────────────────────────────────────────────
+
+export interface ExtensionUsage {
+  id: string;
+  pageName: string;
+  sectionName: string;
+  /** Only for context / function: the component this extension is bound to */
+  boundToComponent?: string;
+  editorDeepLink: string;
+}
+
+// ─── Context Schema ──────────────────────────────────────────────────────────
+
+export interface ContextDataField {
+  name: string;
+  type: string;
+  description: string;
+  readonly?: boolean;
+}
+
+export interface ContextAction {
+  name: string;
+  params: string;   // e.g. "productId: string"
+  returns: string;  // e.g. "void"
+  description: string;
+}
+
+export interface ContextSchema {
+  dataFields: ContextDataField[];
+  actions: ContextAction[];
+}
+
 // ─── Extension (base + discriminated union) ─────────────────────────────────
 
 interface ExtensionBase {
@@ -81,14 +113,18 @@ interface ExtensionBase {
 
 export interface ComponentExtension extends ExtensionBase {
   type: 'component';
+  usages?: ExtensionUsage[];
 }
 
 export interface ContextExtension extends ExtensionBase {
   type: 'context';
+  contextSchema?: ContextSchema;
+  usages?: ExtensionUsage[];
 }
 
 export interface FunctionExtension extends ExtensionBase {
   type: 'function';
+  usages?: ExtensionUsage[];
 }
 
 export interface WebMethodExtension extends ExtensionBase {

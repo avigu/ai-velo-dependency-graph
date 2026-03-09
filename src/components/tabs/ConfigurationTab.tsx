@@ -23,8 +23,8 @@ export default function ConfigurationTab({ extension }: ConfigurationTabProps) {
   };
 
   return (
-    <div className="p-6 max-w-2xl">
-      <div className="flex items-center justify-between mb-5">
+    <div className="p-4 sm:p-6 max-w-2xl">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
         <div>
           <h3 className="text-sm font-semibold" style={{ color: '#cccccc' }}>
             Configuration
@@ -181,7 +181,7 @@ function FieldRenderer({
           value={value as number}
           placeholder={field.placeholder}
           onChange={e => onChange(Number(e.target.value))}
-          className="w-32 px-3 py-2 rounded text-sm border focus:outline-none"
+          className="w-full sm:w-32 px-3 py-2 rounded text-sm border focus:outline-none"
           style={{
             background: '#1e1e1e',
             color: '#cccccc',

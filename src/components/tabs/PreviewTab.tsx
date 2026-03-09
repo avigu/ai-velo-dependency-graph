@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Extension } from '../../types';
-import { Send, Info, ShoppingCart, Star, BarChart3 } from 'lucide-react';
+import { Extension, ContextDataField, ContextAction } from '../../types';
+import { Send, Info, ShoppingCart, Star, BarChart3, Database, Zap } from 'lucide-react';
 
 interface PreviewTabProps {
   extension: Extension;
@@ -10,6 +10,8 @@ export default function PreviewTab({ extension }: PreviewTabProps) {
   switch (extension.type) {
     case 'component':
       return <ComponentPreview extension={extension} />;
+    case 'context':
+      return <ContextPreview extension={extension} />;
     case 'api':
       return <ApiPreview extension={extension} />;
     case 'dashboard-page':
@@ -28,7 +30,7 @@ function ComponentPreview({ extension }: { extension: Extension }) {
         Live sandbox preview — rendered with mock props
       </p>
       <div
-        className="rounded-lg border p-8 flex items-center justify-center"
+        className="rounded-lg border p-4 sm:p-8 flex items-center justify-center overflow-x-auto"
         style={{ background: '#fff', borderColor: '#3e3e42', minHeight: 280 }}
       >
         <MockComponentRender name={extension.name} />
@@ -85,7 +87,7 @@ function MockComponentRender({ name }: { name: string }) {
 
   if (name.toLowerCase().includes('navigation') || name.toLowerCase().includes('menu')) {
     return (
-      <div style={{ fontFamily: 'sans-serif', width: '100%', maxWidth: 480 }}>
+      <div style={{ fontFamily: 'sans-serif', width: '100%', maxWidth: '100%' }}>
         <nav style={{ background: '#1a1a2e', padding: '12px 20px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 24 }}>
           <span style={{ color: '#e94560', fontWeight: 700, fontSize: 18 }}>Logo</span>
           {['Home', 'Products', 'About', 'Contact'].map(item => (
@@ -128,6 +130,147 @@ function MockComponentRender({ name }: { name: string }) {
       <div style={{ fontSize: 48, marginBottom: 12 }}>🧩</div>
       <p style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>{name}</p>
       <p style={{ fontSize: 12 }}>Component Preview</p>
+    </div>
+  );
+}
+
+// ─── Context Preview ──────────────────────────────────────────────────────────
+
+function ContextPreview({ extension }: { extension: Extension }) {
+  if (extension.type !== 'context' || !extension.contextSchema) {
+    return <NotPreviewable extension={extension} />;
+  }
+
+  const { dataFields, actions } = extension.contextSchema;
+
+  return (
+    <div className="p-6 max-w-2xl">
+      <p className="text-xs mb-5" style={{ color: '#858585' }}>
+        Bindable surface — data and actions this context exposes for editor binding
+      </p>
+
+      {/* ── Data Fields ── */}
+      {dataFields.length > 0 && (
+        <section className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Database size={13} style={{ color: '#a78bfa' }} />
+            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#a78bfa' }}>
+              Bindable Data
+            </h3>
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold"
+              style={{ background: 'rgba(167,139,250,0.15)', color: '#a78bfa' }}
+            >
+              {dataFields.length}
+            </span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {dataFields.map(field => (
+              <DataFieldRow key={field.name} field={field} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Actions ── */}
+      {actions.length > 0 && (
+        <section>
+          <div className="flex items-center gap-2 mb-3">
+            <Zap size={13} style={{ color: '#fbbf24' }} />
+            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#fbbf24' }}>
+              Bindable Actions
+            </h3>
+            <span
+              className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold"
+              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}
+            >
+              {actions.length}
+            </span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {actions.map(action => (
+              <ActionRow key={action.name} action={action} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {dataFields.length === 0 && actions.length === 0 && (
+        <p className="text-xs" style={{ color: '#606060' }}>No bindable surface defined for this context.</p>
+      )}
+    </div>
+  );
+}
+
+function DataFieldRow({ field }: { field: ContextDataField }) {
+  return (
+    <div
+      className="rounded-lg border px-4 py-3 flex flex-col sm:flex-row gap-2 sm:gap-4"
+      style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
+    >
+      {/* Left: name + type */}
+      <div className="shrink-0" style={{ minWidth: 0 }}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm font-mono font-semibold" style={{ color: '#9cdcfe' }}>
+            {field.name}
+          </span>
+          {field.readonly && (
+            <span
+              className="px-1 py-px rounded text-[9px] font-semibold uppercase"
+              style={{ background: 'rgba(133,133,133,0.2)', color: '#606060' }}
+            >
+              readonly
+            </span>
+          )}
+        </div>
+        <span
+          className="inline-block px-1.5 py-px rounded text-[11px] font-mono"
+          style={{ background: 'rgba(167,139,250,0.15)', color: '#a78bfa' }}
+        >
+          {field.type}
+        </span>
+      </div>
+
+      {/* Right: description */}
+      <p className="text-xs leading-relaxed self-center" style={{ color: '#858585' }}>
+        {field.description}
+      </p>
+    </div>
+  );
+}
+
+function ActionRow({ action }: { action: ContextAction }) {
+  const signature = action.params
+    ? `${action.name}(${action.params})`
+    : `${action.name}()`;
+
+  return (
+    <div
+      className="rounded-lg border px-4 py-3 flex flex-col sm:flex-row gap-2 sm:gap-4"
+      style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
+    >
+      {/* Left: signature + return type */}
+      <div className="shrink-0" style={{ minWidth: 0 }}>
+        <div className="mb-1">
+          <span className="text-sm font-mono font-semibold" style={{ color: '#dcdcaa' }}>
+            {signature}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="text-[10px]" style={{ color: '#606060' }}>returns</span>
+          <span
+            className="inline-block px-1.5 py-px rounded text-[11px] font-mono"
+            style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }}
+          >
+            {action.returns || 'void'}
+          </span>
+        </div>
+      </div>
+
+      {/* Right: description */}
+      <p className="text-xs leading-relaxed self-center" style={{ color: '#858585' }}>
+        {action.description}
+      </p>
     </div>
   );
 }
@@ -186,24 +329,35 @@ function ApiPreview({ extension }: { extension: Extension }) {
 
       {/* Request bar */}
       <div
-        className="flex gap-2 mb-4 p-3 rounded-lg border"
+        className="flex flex-col sm:flex-row gap-2 mb-4 p-3 rounded-lg border"
         style={{ background: '#2d2d30', borderColor: '#3e3e42' }}
       >
-        <select
-          value={method}
-          onChange={e => setMethod(e.target.value)}
-          className="px-2 py-1.5 rounded text-xs font-bold border-0 focus:outline-none"
-          style={{ background: '#1e1e1e', color: METHOD_COLORS[method], minWidth: 80 }}
-        >
-          {HTTP_METHODS.map(m => (
-            <option key={m} value={m} style={{ color: METHOD_COLORS[m] }}>{m}</option>
-          ))}
-        </select>
+        <div className="flex gap-2">
+          <select
+            value={method}
+            onChange={e => setMethod(e.target.value)}
+            className="px-2 py-1.5 rounded text-xs font-bold border-0 focus:outline-none shrink-0"
+            style={{ background: '#1e1e1e', color: METHOD_COLORS[method], minWidth: 80 }}
+          >
+            {HTTP_METHODS.map(m => (
+              <option key={m} value={m} style={{ color: METHOD_COLORS[m] }}>{m}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleSend}
+            disabled={loading}
+            className="sm:hidden flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors shrink-0"
+            style={{ background: '#0e70c0', color: '#fff', opacity: loading ? 0.7 : 1 }}
+          >
+            <Send size={12} />
+            {loading ? '…' : 'Send'}
+          </button>
+        </div>
         <input
           type="text"
           value={path}
           onChange={e => setPath(e.target.value)}
-          className="flex-1 px-3 py-1.5 rounded text-sm border focus:outline-none font-mono"
+          className="flex-1 min-w-0 px-3 py-1.5 rounded text-sm border focus:outline-none font-mono"
           style={{ background: '#1e1e1e', color: '#cccccc', borderColor: '#3e3e42', fontSize: 12 }}
           onFocus={e => (e.target.style.borderColor = '#0e70c0')}
           onBlur={e => (e.target.style.borderColor = '#3e3e42')}
@@ -211,7 +365,7 @@ function ApiPreview({ extension }: { extension: Extension }) {
         <button
           onClick={handleSend}
           disabled={loading}
-          className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium transition-colors shrink-0"
           style={{ background: '#0e70c0', color: '#fff', opacity: loading ? 0.7 : 1 }}
         >
           <Send size={12} />
@@ -302,7 +456,7 @@ function MockDashboardContent({ name }: { name: string }) {
     return (
       <div>
         <h2 style={{ margin: '0 0 16px', fontSize: 20, color: '#0f172a', fontWeight: 700 }}>Sales Analytics</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12, marginBottom: 20 }}>
           {[
             { label: 'Total Revenue', value: '$48,210', change: '+12%' },
             { label: 'Orders', value: '384', change: '+8%' },
@@ -339,6 +493,7 @@ function MockDashboardContent({ name }: { name: string }) {
             + Add Product
           </button>
         </div>
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ background: '#f1f5f9' }}>
@@ -364,6 +519,7 @@ function MockDashboardContent({ name }: { name: string }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     );
   }

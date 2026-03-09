@@ -39,11 +39,11 @@ const ALL_TYPES: ExtensionType[] = [
   'dashboard-page',
 ];
 
-const PREVIEWABLE: ExtensionType[] = ['component', 'api', 'dashboard-page'];
+const PREVIEWABLE: ExtensionType[] = ['component', 'context', 'api', 'dashboard-page'];
 
 interface ExtensionListProps {
   extensions: Extension[];
-  onSelect: (ext: Extension) => void;
+  onSelect: (ext: Extension, tab?: string) => void;
   onNewExtension: () => void;
   activeView: 'extensions' | 'requests';
   onViewChange: (v: 'extensions' | 'requests') => void;
@@ -71,12 +71,12 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension, ac
     <div className="flex flex-col h-full overflow-hidden">
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div
-        className="flex items-center gap-3 px-6 py-3 border-b shrink-0"
+        className="flex items-center gap-2 px-4 sm:px-6 py-3 border-b shrink-0"
         style={{ background: '#252526', borderColor: '#3e3e42' }}
       >
         <NavTabs activeView={activeView} onViewChange={onViewChange} />
 
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative flex-1 min-w-0">
           <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
@@ -96,37 +96,20 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension, ac
           </span>
         )}
 
-        <div className="ml-auto flex items-center gap-2">
-          <a
-            href="/simple"
-            className="px-3 py-1.5 rounded text-xs font-medium transition-colors"
-            style={{ color: '#858585', border: '1px solid #3e3e42' }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.color = '#cccccc';
-              (e.currentTarget as HTMLElement).style.borderColor = '#606060';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.color = '#858585';
-              (e.currentTarget as HTMLElement).style.borderColor = '#3e3e42';
-            }}
-          >
-            Simple view
-          </a>
-          <button
-            onClick={onNewExtension}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
-            style={{ background: '#0e70c0', color: '#fff' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#1481cc')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#0e70c0')}
-          >
-            <Plus size={13} />
-            New Extension
-          </button>
-        </div>
+        <button
+          onClick={onNewExtension}
+          className="ml-auto shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium"
+          style={{ background: '#0e70c0', color: '#fff' }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#1481cc')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#0e70c0')}
+        >
+          <Plus size={13} />
+          <span className="hidden sm:inline">New Extension</span>
+        </button>
       </div>
 
       {/* ── Grouped content ─────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-6 py-5 space-y-8">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-8">
         {groups.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center h-full"
@@ -160,7 +143,7 @@ function TypeSection({
 }: {
   type: ExtensionType;
   extensions: Extension[];
-  onSelect: (e: Extension) => void;
+  onSelect: (e: Extension, tab?: string) => void;
 }) {
   const meta = TYPE_META[type];
   const Icon = TYPE_ICONS[type];
@@ -190,7 +173,7 @@ function TypeSection({
       {/* Cards */}
       <div
         className="grid gap-3"
-        style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}
+        style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))' }}
       >
         {extensions.map(ext => (
           <ExtensionCard key={ext.id} ext={ext} onSelect={onSelect} />
@@ -202,7 +185,7 @@ function TypeSection({
 
 // ── ExtensionCard ─────────────────────────────────────────────────────────────
 
-function ExtensionCard({ ext, onSelect }: { ext: Extension; onSelect: (e: Extension) => void }) {
+function ExtensionCard({ ext, onSelect }: { ext: Extension; onSelect: (e: Extension, tab?: string) => void }) {
   const meta = TYPE_META[ext.type];
   const canPreview = PREVIEWABLE.includes(ext.type);
 
@@ -271,11 +254,11 @@ function ExtensionCard({ ext, onSelect }: { ext: Extension; onSelect: (e: Extens
         style={{ borderColor: '#3e3e42' }}
         onClick={e => e.stopPropagation()}
       >
-        <QuickAction icon={<Settings size={12} />} label="Configure" onClick={() => onSelect(ext)} />
+        <QuickAction icon={<Settings size={12} />} label="Configure" onClick={() => onSelect(ext, 'configuration')} />
         {canPreview && (
-          <QuickAction icon={<Eye size={12} />} label="Preview" onClick={() => onSelect(ext)} />
+          <QuickAction icon={<Eye size={12} />} label="Preview" onClick={() => onSelect(ext, 'preview')} />
         )}
-        <QuickAction icon={<Code size={12} />} label="Code" onClick={() => onSelect(ext)} />
+        <QuickAction icon={<Code size={12} />} label="Code" onClick={() => onSelect(ext, 'code')} />
       </div>
     </div>
   );
