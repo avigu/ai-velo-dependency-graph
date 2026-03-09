@@ -1249,4 +1249,25 @@ export const MOCK_REQUESTS: AIRequest[] = [
       { id: 'e-m1', source: 'ev-member-joined', target: 'ctx-user', type: 'triggers' },
     ],
   },
+  {
+    id: 'req-redeem-points',
+    prompt: "Let customers redeem their loyalty points at checkout — add a 'Redeem Points' button to the product card so they can apply earned points as a discount.",
+    timestamp: '2024-08-20T11:15:00Z',
+    status: 'active',
+    extensionIds: [],
+    modifiedExtensionIds: ['cmp-product-card', 'ctx-cart'],
+    configChanges: [
+      {
+        extensionId: 'cmp-product-card',
+        fieldId: 'buttonLabel',
+        previousValue: 'Add to Cart',
+        newValue: 'Add to Cart + Redeem Points',
+      },
+    ],
+    assistantSummary:
+      "The loyalty widget built in a previous request already tracks points per order. To let customers redeem those points, I updated the ProductCard component to render a 'Redeem Points' button that calls a new redeemPoints action, and extended the CartContext to expose that action alongside the existing cart state. No new extensions were needed — the right place to add this capability was inside the extensions that were already created for the loyalty feature.",
+    relationshipEdges: [
+      { id: 'e-r1', source: 'cmp-product-card', target: 'ctx-cart', type: 'uses' },
+    ],
+  },
 ];
