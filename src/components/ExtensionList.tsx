@@ -13,9 +13,11 @@ import {
   Globe,
   Bell,
   LayoutDashboard,
+  Sparkles,
 } from 'lucide-react';
 import { Extension, ExtensionType, TYPE_META } from '../types';
 import { formatDistanceToNow } from '../utils/dateUtils';
+import { NavTabs } from './RequestsView';
 
 const TYPE_ICONS: Record<ExtensionType, React.ElementType> = {
   component: Layers,
@@ -43,9 +45,11 @@ interface ExtensionListProps {
   extensions: Extension[];
   onSelect: (ext: Extension) => void;
   onNewExtension: () => void;
+  activeView: 'extensions' | 'requests';
+  onViewChange: (v: 'extensions' | 'requests') => void;
 }
 
-export default function ExtensionList({ extensions, onSelect, onNewExtension }: ExtensionListProps) {
+export default function ExtensionList({ extensions, onSelect, onNewExtension, activeView, onViewChange }: ExtensionListProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const q = searchQuery.toLowerCase().trim();
@@ -70,9 +74,7 @@ export default function ExtensionList({ extensions, onSelect, onNewExtension }: 
         className="flex items-center gap-3 px-6 py-3 border-b shrink-0"
         style={{ background: '#252526', borderColor: '#3e3e42' }}
       >
-        <h1 className="text-sm font-semibold whitespace-nowrap" style={{ color: '#cccccc' }}>
-          Extensions
-        </h1>
+        <NavTabs activeView={activeView} onViewChange={onViewChange} />
 
         <div className="relative flex-1 max-w-xs">
           <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -221,9 +223,21 @@ function ExtensionCard({ ext, onSelect }: { ext: Extension; onSelect: (e: Extens
       <div className="p-4">
         {/* Name + status */}
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-sm font-semibold truncate" style={{ color: '#cccccc' }}>
-            {ext.name}
-          </h3>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <h3 className="text-sm font-semibold truncate" style={{ color: '#cccccc' }}>
+              {ext.name}
+            </h3>
+            {(ext.aiGenerated || ext.aiModified) && (
+              <span
+                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0"
+                style={{ background: 'rgba(167,139,250,0.15)', color: '#a78bfa' }}
+                title={ext.aiGenerated ? 'Created by AI' : 'Modified by AI'}
+              >
+                <Sparkles size={9} />
+                {ext.aiGenerated ? 'AI' : 'AI Modified'}
+              </span>
+            )}
+          </div>
           <span
             className="ml-2 px-1.5 py-0.5 rounded-full text-[10px] font-medium shrink-0"
             style={{

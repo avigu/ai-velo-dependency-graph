@@ -5,6 +5,7 @@ import ExtensionList from './components/ExtensionList';
 import DetailPanel from './components/DetailPanel';
 import CreateExtensionModal from './components/CreateExtensionModal';
 import ToastContainer from './components/Toast';
+import RequestsView from './components/RequestsView';
 
 function App() {
   const [extensions, setExtensions] = useState<Extension[]>(MOCK_EXTENSIONS);
@@ -12,6 +13,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [activeView, setActiveView] = useState<'extensions' | 'requests'>('extensions');
 
   const addToast = useCallback((message: string, type: Toast['type'] = 'success') => {
     const id = Math.random().toString(36).slice(2);
@@ -61,11 +63,23 @@ function App() {
             );
           }}
         />
+      ) : activeView === 'requests' ? (
+        <RequestsView
+          extensions={extensions}
+          onNavigateToExtension={ext => {
+            setActiveView('extensions');
+            handleSelectExtension(ext);
+          }}
+          activeView={activeView}
+          onViewChange={setActiveView}
+        />
       ) : (
         <ExtensionList
           extensions={extensions}
           onSelect={handleSelectExtension}
           onNewExtension={() => setIsCreateModalOpen(true)}
+          activeView={activeView}
+          onViewChange={setActiveView}
         />
       )}
 
